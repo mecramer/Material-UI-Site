@@ -4,7 +4,7 @@ import Lottie from 'react-lottie' // library for displaying animations
 import { makeStyles, useTheme } from '@material-ui/core/styles'
 import Grid from '@material-ui/core/Grid'
 import Button from '@material-ui/core/Button'
-import ButtonArrow from '../components/ui/ButtonArrow' // a custom made component to add arrows in buttons
+import ButtonArrow from './ui/ButtonArrow' // a custom made component to add arrows in buttons
 import Typography from '@material-ui/core/Typography'
 import useMediaQuery from '@material-ui/core/useMediaQuery'
 import Card from '@material-ui/core/Card'
