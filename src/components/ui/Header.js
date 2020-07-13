@@ -78,6 +78,9 @@ const useStyles = makeStyles((theme) => ({
         marginLeft   : '50px',
         marginRight  : '25px',
         height       : '45px',
+        '&:hover'    : {
+            backgroundColor : theme.palette.secondary.light,
+        },
     },
     menu                : {
         backgroundColor : theme.palette.common.blue,
@@ -122,23 +125,20 @@ const useStyles = makeStyles((theme) => ({
     },
 }))
 
-function Header (props) {
+const Header = (props) => {
     const classes = useStyles()
     const theme = useTheme()
     const iOS = process.browser && /iPad|iPhone|iPod/.test(navigator.userAgent)
     const matches = useMediaQuery(theme.breakpoints.down('md'))
 
-    // hook for active menu index number
-    const [ value, setValue ] = useState(0)
     // hook to store the component clicked on where we want the menu to be rendered
     const [ anchorEl, setAnchorEl ] = useState(null)
     // hook to determine the visibility of the menu
     const [ openMenu, setOpenMenu ] = useState(false)
-    const [ selectedIndex, setSelectedIndex ] = useState(0)
     const [ openDrawer, setOpenDrawer ] = useState(false)
 
     const handleChange = (event, newValue) => {
-        setValue(newValue)
+        props.setValue(newValue)
     }
 
     // all the information about where we just clicked on the screen, the element we just clicked on
@@ -150,7 +150,7 @@ function Header (props) {
     const handleMenuItemClick = (event, index) => {
         setAnchorEl(null)
         setOpenMenu(false)
-        setSelectedIndex(index)
+        props.setSelectedIndex(index)
     }
 
     // now do the opposite
@@ -163,7 +163,7 @@ function Header (props) {
     const menuOptions = [
         { name: 'Service', link: '/services', activeIndex: 1, selectedIndex: 0 },
         { name: 'Custom Software Development', link: '/customsoftware', activeIndex: 1, selectedIndex: 1 },
-        { name: 'Mobile App Development', link: '/mobileapps', activeIndex: 1, selectedIndex: 2 },
+        { name: 'iOS/Android App Development', link: '/mobileapps', activeIndex: 1, selectedIndex: 2 },
         { name: 'Website Development', link: '/websites', activeIndex: 1, selectedIndex: 3 },
     ]
 
@@ -187,19 +187,22 @@ function Header (props) {
             ;[ ...menuOptions, ...routes ].forEach((route) => {
                 switch (window.location.pathname) {
                     case `${route.link}`:
-                        if (value !== route.activeIndex) {
-                            setValue(route.activeIndex)
-                            if (route.selectedIndex && route.selectedIndex !== selectedIndex) {
-                                setSelectedIndex(route.selectedIndex)
+                        if (props.value !== route.activeIndex) {
+                            props.setValue(route.activeIndex)
+                            if (route.selectedIndex && route.selectedIndex !== props.selectedIndex) {
+                                props.setSelectedIndex(route.selectedIndex)
                             }
                         }
+                        break
+                    case '/estimate':
+                        props.setValue(5)
                         break
                     default:
                         break
                 }
             })
         },
-        [ value, menuOptions, selectedIndex, routes ],
+        [ props.value, menuOptions, props.selectedIndex, routes, props ],
     )
 
     const tabs = (
@@ -207,7 +210,7 @@ function Header (props) {
             {/* <Typography variant='h3'>Arc Development</Typography> */}
             {/* component=Link allows the Tab component to also act as a Link component */}
 
-            <Tabs value={value} onChange={handleChange} className={classes.tabContainer} indicatorColor='primary'>
+            <Tabs value={props.value} onChange={handleChange} className={classes.tabContainer} indicatorColor='primary'>
                 {routes.map((route, index) => (
                     <Tab
                         key={`${route}${index}`}
@@ -221,7 +224,14 @@ function Header (props) {
                     />
                 ))}
             </Tabs>
-            <Button variant='contained' color='secondary' className={classes.button}>
+            <Button
+                variant='contained'
+                component={Link}
+                to='/estimate'
+                color='secondary'
+                className={classes.button}
+                onClick={() => props.setValue(5)} // setting value to an index that doesn't exist so no sections active when visiting
+            >
                 Free Estimate
             </Button>
             <Menu
@@ -244,10 +254,10 @@ function Header (props) {
                         classes={{ root: classes.menuItem }}
                         onClick={(event) => {
                             handleMenuItemClick(event, index)
-                            setValue(1)
+                            props.setValue(1)
                             handleClose()
                         }}
-                        selected={index === selectedIndex && value === 1}
+                        selected={index === props.selectedIndex && props.value === 1}
                     >
                         {option.name}
                     </MenuItem>
@@ -275,11 +285,11 @@ function Header (props) {
                             button
                             component={Link}
                             to={route.link}
-                            selected={value === route.activeIndex}
+                            selected={props.value === route.activeIndex}
                             classes={{ root: classes.drawerItem, selected: classes.drawerItemSelected }}
                             onClick={() => {
                                 setOpenDrawer(false)
-                                setValue(route.activeIndex)
+                                props.setValue(route.activeIndex)
                             }}
                         >
                             <ListItemText disableTypography className={classes.drawerItemSelected}>
@@ -292,13 +302,13 @@ function Header (props) {
                         classes={{ root: classes.drawerItemEstimate, selected: classes.drawerItemSelected }}
                         onClick={() => {
                             setOpenDrawer(false)
-                            setValue(5)
+                            props.setValue(5)
                         }}
                         divider
                         button
                         component={Link}
                         to='/estimate'
-                        selected={value === 5}
+                        selected={props.value === 5}
                     >
                         <ListItemText disableTypography className={classes.drawerItem}>
                             Free Estimate
@@ -325,7 +335,7 @@ function Header (props) {
                             component={Link}
                             to='/'
                             className={classes.logoContainer}
-                            onClick={() => setValue(0)}
+                            onClick={() => props.setValue(0)}
                             disableRipple
                         >
                             <img src={logo} alt='company logo' className={classes.logo} />
