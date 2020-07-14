@@ -7,6 +7,7 @@ import Header from './ui/Header'
 import Footer from './ui/Footer'
 import LandingPage from './LandingPage'
 import Services from './Services'
+import CustomSoftware from './CustomSoftware'
 
 function App () {
     // hook for active menu index number
@@ -37,7 +38,13 @@ function App () {
                             <Services {...props} setValue={setValue} setSelectedIndex={setSelectedIndex} />
                         )}
                     />
-                    <Route exact path='/customsoftware' component={() => <div>Custom Software test</div>} />
+                    <Route
+                        exact
+                        path='/customsoftware'
+                        render={(props) => (
+                            <CustomSoftware {...props} setValue={setValue} setSelectedIndex={setSelectedIndex} />
+                        )}
+                    />
                     <Route exact path='/mobileapps' component={() => <div>Mobile Apps test</div>} />
                     <Route exact path='/websites' component={() => <div>Websites test</div>} />
                     <Route exact path='/revolution' component={() => <div>Revolution test</div>} />

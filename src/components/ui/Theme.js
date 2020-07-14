@@ -18,47 +18,52 @@ export default createMuiTheme({
         },
     },
     typography : {
-        tab         : {
+        tab        : {
             fontFamily    : 'Raleway',
             textTransform : 'none',
             fontWeight    : 700,
             fontSize      : '1rem',
         },
-        estimate    : {
+        estimate   : {
             fontFamily    : 'Pacifico',
             fontSize      : '1rem',
             textTransform : 'none',
             color         : 'white',
         },
-        h2          : {
+        h2         : {
             fontFamily : 'Raleway',
             fontWeight : '700',
             fontSize   : '2.5rem',
             color      : arcBlue,
             lineHeight : 1.5,
         },
-        h3          : {
+        h3         : {
             fontFamily : 'Pacifico',
             fontSize   : '2.5rem',
             color      : arcBlue,
         },
-        h4          : {
+        h4         : {
             fontFamily : 'Raleway',
             fontSize   : '1.75rem',
             color      : arcBlue,
             fontWeight : 700,
         },
-        subtitle1   : {
+        subtitle1  : {
             fontSize   : '1.25rem',
             fontWeight : 300,
             color      : arcGrey,
         },
-        subtitle2   : {
-            color      : 'white',
+        subtitle2  : {
             fontSize   : '1.25rem',
             fontWeight : 300,
+            color      : 'white',
         },
-        learnButton : {
+        body1      : {
+            fontSize   : '1.25rem',
+            color      : arcGrey,
+            fontWeight : 300,
+        },
+        learButton : {
             borderColor   : arcBlue,
             color         : arcBlue,
             borderWidth   : 2,
