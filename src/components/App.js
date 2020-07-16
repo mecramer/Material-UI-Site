@@ -11,6 +11,7 @@ import CustomSoftware from './CustomSoftware'
 import MobileApps from './MobileApps'
 import Websites from './Websites'
 import Revolution from './Revolution'
+import About from './About'
 
 function App () {
     // hook for active menu index number
@@ -69,7 +70,11 @@ function App () {
                             <Revolution {...props} setValue={setValue} setSelectedIndex={setSelectedIndex} />
                         )}
                     />
-                    <Route exact path='/about' component={() => <div>About test</div>} />
+                    <Route
+                        exact
+                        path='/about'
+                        render={(props) => <About {...props} setValue={setValue} setSelectedIndex={setSelectedIndex} />}
+                    />
                     <Route exact path='/contact' component={() => <div>Contact test</div>} />
                     <Route exact path='/estimate' component={() => <div>Estimate test</div>} />
                 </Switch>
