@@ -1,7 +1,8 @@
 import React, { useState } from 'react'
+import axios from 'axios'
 import { Link } from 'react-router-dom'
 import { makeStyles, useTheme } from '@material-ui/core/styles'
-import { Grid, Typography, Button, TextField, useMediaQuery, Dialog, DialogContent } from '@material-ui/core'
+import { Grid, Typography, Button, TextField, useMediaQuery, Dialog, DialogContent, CircularProgress, Snackbar } from '@material-ui/core'
 
 import ButtonArrow from './ui/ButtonArrow'
 
@@ -86,9 +87,13 @@ function Contact (props) {
     const [ email, setEmail ] = useState('')
     const [ emailHelper, setEmailHelper ] = useState('')
 
-    const [ message, setMessage ] = useState()
+    const [ message, setMessage ] = useState('')
 
     const [ open, setOpen ] = useState(false)
+
+    const [ loading, setLoading ] = useState(false)
+
+    const [ alert, setAlert ] = useState({ open: false, message: '', backgroundColor: '#fff' })
 
     const onChange = (event) => {
         let valid
@@ -119,6 +124,38 @@ function Contact (props) {
         }
     }
 
+    const onConfirm = () => {
+        setLoading(true)
+        axios
+            .get('https://us-central1-materiial-ui-course.cloudfunctions.net/sendGoogleMail', {
+                params : {
+                    name    : name,
+                    email   : email,
+                    phone   : phone,
+                    message : message,
+                },
+            })
+            .then((response) => {
+                setLoading(false)
+                setOpen(false)
+                setName('')
+                setEmail('')
+                setPhone('')
+                setMessage('')
+                setAlert({ open: true, message: 'Message sent successfully!', backgroundColor: '#4bb543' })
+            })
+            .catch((error) => {
+                setLoading(false)
+                setAlert({ open: true, message: 'Something went wrong, please try again.', backgroundColor: '#ff3232' })
+            })
+    }
+
+    const buttonContents = (
+        <React.Fragment>
+            Send Message<img src={airplane} alt='paper airplane' style={{ marginLeft: '1em' }} />
+        </React.Fragment>
+    )
+
     return (
         <Grid container direction='row'>
             <Grid
@@ -137,7 +174,11 @@ function Contact (props) {
                             <Typography variant='h2' align={matchesMD ? 'center' : undefined} style={{ lineHeight: 1 }}>
                                 Contact Us
                             </Typography>
-                            <Typography variant='body1' align={matchesMD ? 'center' : undefined} style={{ color: theme.palette.common.blue }}>
+                            <Typography
+                                variant='body1'
+                                align={matchesMD ? 'center' : undefined}
+                                style={{ color: theme.palette.common.blue }}
+                            >
                                 We're waiting.
                             </Typography>
                         </Grid>
@@ -167,7 +208,13 @@ function Contact (props) {
                         </Grid>
                         <Grid item container direction='column' style={{ maxWidth: '20em' }}>
                             <Grid item style={{ marginBottom: '0.5em' }}>
-                                <TextField label='Name' id='name' fullWidth value={name} onChange={(event) => setName(event.target.value)} />
+                                <TextField
+                                    label='Name'
+                                    id='name'
+                                    fullWidth
+                                    value={name}
+                                    onChange={(event) => setName(event.target.value)}
+                                />
                             </Grid>
                             <Grid item style={{ marginBottom: '0.5em' }}>
                                 <TextField
@@ -218,7 +265,7 @@ function Contact (props) {
                                 variant='contained'
                                 className={classes.sendButton}
                             >
-                                Send Message<img src={airplane} alt='paper airplane' style={{ marginLeft: '1em' }} />
+                                {buttonContents}
                             </Button>
                         </Grid>
                     </Grid>
@@ -229,7 +276,11 @@ function Contact (props) {
                 fullScreen={matchesXS}
                 onClose={() => setOpen(false)}
                 style={{ zIndex: 1302 }}
-                PaperProps={{ style: { padding: matchesXS ? '1em 0' : matchesSM ? '5em 5em' : matchesMD ? '5em 10em' : '5em 20em' } }}
+                PaperProps={{
+                    style : {
+                        padding : matchesXS ? '1em 0' : matchesSM ? '5em 5em' : matchesMD ? '5em 10em' : '5em 20em',
+                    },
+                }}
             >
                 <DialogContent>
                     <Grid container direction='column'>
@@ -294,16 +345,24 @@ function Contact (props) {
                                     email.length === 0 ||
                                     phone.length === 0
                                 }
-                                onClick={() => setOpen(true)}
+                                onClick={onConfirm}
                                 variant='contained'
                                 className={classes.sendButton}
                             >
-                                Send Message<img src={airplane} alt='paper airplane' style={{ marginLeft: '1em' }} />
+                                {loading ? <CircularProgress size={30} /> : buttonContents}
                             </Button>
                         </Grid>
                     </Grid>
                 </DialogContent>
             </Dialog>
+            <Snackbar
+                open={alert.open}
+                message={alert.message}
+                ContentProps={{ backgroundColor: alert.backgroundColor }}
+                anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+                onClose={() => setAlert({ ...alert, open: false })}
+                autoHideDuration={4000}
+            />
             <Grid
                 item
                 container
@@ -324,7 +383,13 @@ function Contact (props) {
                                 Take advantage of the 21st Century.
                             </Typography>
                             <Grid container item justify={matchesMD ? 'center' : undefined}>
-                                <Button onClick={() => props.setValue(2)} component={Link} to='/estimate' variant='outlined' className={classes.learnButton}>
+                                <Button
+                                    onClick={() => props.setValue(2)}
+                                    component={Link}
+                                    to='/estimate'
+                                    variant='outlined'
+                                    className={classes.learnButton}
+                                >
                                     <span style={{ marginRight: 5 }}>Learn More</span>
                                     <ButtonArrow width={10} height={10} fill={theme.palette.common.blue} />
                                 </Button>
