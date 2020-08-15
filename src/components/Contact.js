@@ -127,7 +127,7 @@ function Contact (props) {
     const onConfirm = () => {
         setLoading(true)
         axios
-            .get('https://us-central1-materiial-ui-course.cloudfunctions.net/sendGoogleMail', {
+            .get('https://us-central1-materiial-ui-course.cloudfunctions.net/sendMail', {
                 params : {
                     name    : name,
                     email   : email,
@@ -206,7 +206,7 @@ function Contact (props) {
                                 </Typography>
                             </Grid>
                         </Grid>
-                        <Grid item container direction='column' style={{ maxWidth: '20em' }}>
+                        <Grid item container direction='column' style={{ width: '20em' }}>
                             <Grid item style={{ marginBottom: '0.5em' }}>
                                 <TextField
                                     label='Name'
@@ -239,12 +239,13 @@ function Contact (props) {
                                 />
                             </Grid>
                         </Grid>
-                        <Grid item style={{ maxWidth: '20em' }}>
+                        <Grid item style={{ width: '20em' }}>
                             <TextField
                                 value={message}
                                 InputProps={{ disableUnderline: true }}
                                 id='message'
                                 multiline
+                                placeholder='Tell us more about your project.'
                                 fullWidth
                                 rows={10}
                                 className={classes.message}
@@ -273,12 +274,12 @@ function Contact (props) {
             </Grid>
             <Dialog
                 open={open}
-                fullScreen={matchesXS}
+                fullScreen={matchesSM}
                 onClose={() => setOpen(false)}
                 style={{ zIndex: 1302 }}
                 PaperProps={{
                     style : {
-                        padding : matchesXS ? '1em 0' : matchesSM ? '5em 5em' : matchesMD ? '5em 10em' : '5em 20em',
+                        padding : matchesXS ? '1em 0' : matchesSM ? '5em 5em' : matchesMD ? '5em 15em' : '5em 25em',
                     },
                 }}
             >
@@ -316,7 +317,7 @@ function Contact (props) {
                             />
                         </Grid>
 
-                        <Grid item style={{ maxWidth: matchesXS ? '100%' : '20em' }}>
+                        <Grid item style={{ width: matchesSM ? '100%' : '20em' }}>
                             <TextField
                                 value={message}
                                 InputProps={{ disableUnderline: true }}
